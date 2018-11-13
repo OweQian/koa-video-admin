@@ -49,4 +49,24 @@ router.get('/upload', async (ctx, next) => {
       user: '王小白'
     }})
 })
+
+// 管理员列表
+router.get('/adminUser', async (ctx, next) => {
+  await ctx.render('adminUser', {
+    session: {
+      user: '王小白'
+    },
+    dataLength: 5,
+    nowPage: 1,
+    type: 'adminUser',
+    users: [{
+      id: 1,
+      username: 'wangxiaobai'
+    }, {
+      id: 2,
+      username: 'wangxiaobai'
+    }]
+  })
+})
+
 module.exports = router
