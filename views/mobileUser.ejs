@@ -1,0 +1,40 @@
+<% include header %>
+<div class="ui grid" style="height: 100%;">
+    <div class="two wide column" style="height: 100%; background-color: #1b1c1d;">
+        <% include navbar %>
+    </div>
+    <div class="thirteen wide centered column" style="margin-top: 30px;">
+        <table class="ui very basic table">
+            <thead>
+            <tr>
+                <th>用户ID</th>
+                <th>用户名</th>
+                <th>用户头像</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% users.forEach(function (user) { %>
+            <tr>
+                <td><%= user.id %></td>
+                <td><%= user.username %></td>
+                <td>
+                    <% if (user.avator) { %>
+                    <img src="<%= user.avator %>" alt="">
+                    <% } else { %>
+                    暂未上传头像
+                    <% } %>
+                </td>
+            </tr>
+            <% }) %>
+            </tbody>
+            <tfoot>
+            <tr>
+                <th colspan="10">
+                    <% include pagination %>
+                </th>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+<% include footer %>

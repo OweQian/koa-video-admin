@@ -69,4 +69,25 @@ router.get('/adminUser', async (ctx, next) => {
   })
 })
 
+// 手机用户列表
+router.get('/mobileUser', async (ctx, next) => {
+  await ctx.render('mobileUser', {
+    session: {
+      user: '王小白'
+    },
+    dataLength: 5,
+    nowPage: 1,
+    type: 'adminUser',
+    users: [{
+      id: 1,
+      username: 'wangxiaobai',
+      avator: ''
+    }, {
+      id: 2,
+      username: 'wangxiaobai',
+      avator: ''
+    }]
+  })
+})
+
 module.exports = router
