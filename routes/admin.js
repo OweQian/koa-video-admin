@@ -77,7 +77,7 @@ router.get('/mobileUser', async (ctx, next) => {
     },
     dataLength: 5,
     nowPage: 1,
-    type: 'adminUser',
+    type: 'mobileUser',
     users: [{
       id: 1,
       username: 'wangxiaobai',
@@ -86,6 +86,33 @@ router.get('/mobileUser', async (ctx, next) => {
       id: 2,
       username: 'wangxiaobai',
       avator: ''
+    }]
+  })
+})
+
+// 评论列表
+router.get('/comments', async (ctx, next) => {
+  await ctx.render('comments', {
+    session: {
+      user: '王小白'
+    },
+    dataLength: 5,
+    nowPage: 1,
+    type: 'comments',
+    comments: [{
+      id: 1,
+      username: 'wangxiaobai',
+      date: '2018-11-13',
+      content: '可不高峰',
+      video_name: '战狼',
+      uid: 1
+    }, {
+      id: 2,
+      username: 'wangxiaobai',
+      date: '2018-11-13',
+      content: '可不高峰',
+      video_name: '战狼',
+      uid: 2
     }]
   })
 })

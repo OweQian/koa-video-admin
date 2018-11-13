@@ -1,0 +1,41 @@
+<% include header %>
+<div class="ui grid" style="height: 100%;">
+    <div class="two wide column" style="height: 100%; background-color: #1b1c1d;">
+        <% include navbar %>
+    </div>
+    <div class="thirteen wide centered column" style="margin-top: 30px;">
+        <table class="ui very basic table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>用户名</th>
+                <th>日期</th>
+                <th>内容</th>
+                <th>影片名称</th>
+                <th>影片ID</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% comments.forEach(function (comment) { %>
+            <tr>
+                <td><%= comment.id %></td>
+                <td><%= comment.username %></td>
+                <td><%= comment.date %></td>
+                <td><%= comment.content %></td>
+                <td><%= comment.video_name %></td>
+                <td><%= comment.uid %></td>
+            </tr>
+
+            <% }) %>
+            </tbody>
+            <tfoot>
+            <tr>
+                <th colspan="10">
+                    <% include pagination %>
+                </th>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+<% include footer %>
