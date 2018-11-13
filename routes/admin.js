@@ -117,4 +117,31 @@ router.get('/comments', async (ctx, next) => {
   })
 })
 
+// 喜欢、不喜欢
+router.get('/favorites', async (ctx, next) => {
+  await ctx.render('favorites', {
+    session: {
+      user: '王小白'
+    },
+    dataLength: 5,
+    nowPage: 1,
+    type: 'favorites',
+    favorites: [{
+      id: 1,
+      is_favorite: '喜欢',
+      username: 'wangxiaobai',
+      video_name: '战狼',
+      star: '7.8',
+      uid: 1
+    }, {
+      id: 2,
+      is_favorite: '喜欢',
+      username: 'wangxiaobai',
+      video_name: '战狼',
+      star: '7.8',
+      uid: 1
+    }]
+  })
+})
+
 module.exports = router
