@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WQ管理后台</title>
+    <link href="https://unpkg.com/semantic-ui@2.3.3/dist/semantic.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script src="https://unpkg.com/semantic-ui@2.3.3/dist/semantic.min.js"></script>
+    <style>
+        html, body {
+            height: 100%;
+        }
+        #page {
+            display: table;
+            margin: 20px auto;
+        }
+        #page a {
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            color: #428bca;
+            margin: 0 2px;
+            border-radius: 4px;
+        }
+        #page a:hover {
+            background: #428bca;
+            color: #fff;
+        }
+        #page a.active {
+            background: #428bca;
+            color: #fff;
+        }
+        #page span {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="ui inverted segment">
+    <div class="ui inverted secondary menu">
+        <div class="right menu">
+            <div class="ui item dropdown">
+                <div class="text">
+                    <% if(session.user){ %>
+                    <img src="ui avatar image" alt="">
+                    <%= session.user %>
+                    <% } %>
+                </div>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <div class="header">
+                        登出操作
+                    </div>
+                    <% if(session.user){ %>
+                    <a href="/signout" class="item">登出</a>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

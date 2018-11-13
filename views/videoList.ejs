@@ -1,0 +1,55 @@
+<% include header %>
+<div class="ui grid" style="height: 100%;">
+    <div class="two wide column" style="height: 100%; background-color: #1b1c1d;">
+        <% include navbar %>
+    </div>
+    <div class="thirteen wide centered column" style="margin-top: 30px;">
+        <table class="ui large very basic table">
+            <thead>
+            <tr>
+                <th>名称</th>
+                <th>国家</th>
+                <th>分类</th>
+                <th>上映时间</th>
+                <th>评分</th>
+                <th>时长</th>
+                <th>类型</th>
+                <th>导演/演员</th>
+                <th>描述</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% videos.forEach(function (video) { %>
+            <tr>
+                <td><%= video.name %></td>
+                <td><%= video.country %></td>
+                <td><%= video.release_time %></td>
+                <td><%= video.image %></td>
+                <td><%= video.star %></td>
+                <td><%= video.duration %></td>
+                <td><%= video.type %></td>
+                <td><%= video.actors %></td>
+                <td><%= video.detail %></td>
+                <td>
+                    <a href="/edit/<%= video.id %>">
+                        <button class="ui icon primary basic button" title="edit"><i class="edit icon"></i></button>
+                    </a>
+                    <button v-id="<%= video.id %>" class="ui icon negative basic button" title="delete"><i
+                                class="erase icon"></i></button>
+                </td>
+            </tr>
+
+            <% }) %>
+            </tbody>
+            <tfoot>
+            <tr>
+                <th colspan="10">
+                    <% include pagination %>
+                </th>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+<% include footer %>
