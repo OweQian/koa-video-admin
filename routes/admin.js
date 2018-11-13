@@ -42,4 +42,11 @@ router.get('/list', async (ctx, next) => {
   })
 })
 
+// 上传数据
+router.get('/upload', async (ctx, next) => {
+  await ctx.render('upload', {
+    session: {
+      user: '王小白'
+    }})
+})
 module.exports = router
