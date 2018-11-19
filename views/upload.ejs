@@ -4,7 +4,7 @@
         <% include navbar %>
     </div>
     <div class="thirteen wide centered column" style="margin-top: 30px;">
-        <form action="" onsubmit="return" class="ui form">
+        <div onsubmit="return" class="ui form">
             <div class="field">
                 <label>名称</label>
                 <input type="text" name="name" placeholder="名称">
@@ -14,14 +14,14 @@
                     <label>国家</label>
                     <select class="ui search fluid dropdown" name="country">
                         <option value="">国家</option>
-                        <option value="🇨🇳中国">🇨🇳中国</option>
-                        <option value="🇺🇸美国">🇺🇸美国</option>
-                        <option value="🇬🇧英国">🇬🇧英国</option>
-                        <option value="🇫🇷法国">🇫🇷法国</option>
-                        <option value="🇯🇵日本">🇯🇵日本</option>
-                        <option value="🇹🇭泰国">🇹🇭泰国</option>
-                        <option value="🇰🇷韩国">🇰🇷韩国</option>
-                        <option value="🇮🇳印度">🇮🇳印度</option>
+                        <option value="中国">🇨🇳中国</option>
+                        <option value="美国">🇺🇸美国</option>
+                        <option value="英国">🇬🇧英国</option>
+                        <option value="法国">🇫🇷法国</option>
+                        <option value="日本">🇯🇵日本</option>
+                        <option value="泰国">🇹🇭泰国</option>
+                        <option value="韩国">🇰🇷韩国</option>
+                        <option value="印度">🇮🇳印度</option>
                         <option value="其它">其它</option>
                     </select>
                 </div>
@@ -39,7 +39,7 @@
                 </div>
                 <div class="field">
                     <label>上映时间</label>
-                    <input type="date" name="releaseTime" placeholder="上映时间">
+                    <input type="date" name="release_time" placeholder="上映时间">
                 </div>
             </div>
             <div class="field">
@@ -100,10 +100,156 @@
                 <label>描述</label>
                 <textarea name="detail" placeholder="导演/演员"></textarea>
             </div>
-            <div class="ui button" tabindex="0">Submit</div>
-            <div class="ui button" tabindex="0">重置</div>
-            <div class="ui button" tabindex="0">清除提示</div>
-        </form>
+            <div class="ui button submit">Submit</div>
+            <div class="ui button reset">重置</div>
+            <div class="ui button clear">清除提示</div>
+        </div>
     </div>
 </div>
+
+<script>
+  $(function () {
+    $('select.dropdown').dropdown()
+    let formdata = new FormData()
+    $('input[name=image]').change(function (e) {
+      console.log(e.target)
+      formdata.append('image', e.target.files[0])
+    })
+    let isAllow = true
+    if (!isAllow) return
+    $('.ui.form')
+      .form({
+        inline: true,
+        on: 'blur',
+        onSuccess: function () {
+          isAllow = false
+          let inputArr = Array.of('name', 'release_time', 'duration', 'actors')
+          if (inputArr) {
+            inputArr.forEach(function (val) {
+              formdata.append(val, $('input[name=' + val + ']').val())
+            })
+          }
+          let selectArr = Array.of('country', 'classify', 'star', 'type')
+          if (selectArr) {
+            selectArr.forEach(function (val) {
+              formdata.append(val, $('select[name=' + val + ']').val())
+            })
+          }
+          formdata.append('detail', $('textarea').val())
+          $.ajax({
+            url: '/upload',
+            type: 'POST',
+            cache: false,
+            data: formdata,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            success: function (data) {
+              isAllow = true
+              if (data.code === 200) {
+                alert('上传成功')
+                location.href = '/'
+                formdata = new FormData()
+              } else {
+                alert('上传失败')
+                formdata = new FormData()
+              }
+            }
+          })
+        },
+        fields: {
+          name: {
+            identifier: 'name',
+            rules: [
+              {
+                type: 'empty',
+                prompt: '请输入名称！'
+              }
+            ]
+          },
+          country: {
+            identifier: 'country',
+            rules: [
+              {
+                type: 'empty',
+                prompt: '请输入国家！'
+              }
+            ]
+          },
+          classify: {
+            identifier: 'classify',
+            rules: [
+              {
+                type: 'empty',
+                prompt: '请输入分类！'
+              }
+            ]
+          },
+          release_time: {
+            identifier: 'release_time',
+            rules: [
+              {
+                type: 'empty',
+                prompt: '请输入时间！'
+              }
+            ]
+          },
+          image: {
+            identifier: 'image',
+            rules: [
+              {
+                type: 'empty',
+                prompt: '请上传图片！'
+              }
+            ]
+          },
+          star: {
+            identifier: 'star',
+            rules: [
+              {
+                type: 'empty',
+                prompt: '请输入评分！'
+              }
+            ]
+          },
+          duration: {
+            identifier: 'duration',
+            rules: [
+              {
+                type: 'empty',
+                prompt: '请输入时长！'
+              }
+            ]
+          },
+          type: {
+            identifier: 'type',
+            rules: [
+              {
+                type: 'empty',
+                prompt: '请输入类型！'
+              }
+            ]
+          },
+          actors: {
+            identifier: 'actors',
+            rules: [
+              {
+                type: 'empty',
+                prompt: '请输入导演和演员！'
+              }
+            ]
+          },
+          detail: {
+            identifier: 'detail',
+            rules: [
+              {
+                type: 'empty',
+                prompt: '请输入描述！'
+              }
+            ]
+          },
+        }
+      })
+  })
+</script>
 <% include footer %>

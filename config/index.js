@@ -9,5 +9,6 @@ module.exports = {
     PASSWORD: env.DB_PASS,
     PORT: env.DB_PORT,
     HOST: env.DB_HOST
-  }
+  },
+  JWT_SECRET: env.SECRET_KEY
 }
