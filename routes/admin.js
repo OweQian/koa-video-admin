@@ -5,14 +5,14 @@ const fs = require('fs')
 const checkLogin = require('../middlewares/check').checkLogin
 
 router.get('/', async (ctx, next) => {
-  let data;
-  let page;
-  let dataLength;
+  let data
+  let page
+  let dataLength
   console.log(ctx.querystring)
   if (ctx.querystring === '') {
     page = 1
   } else {
-    page = ctx.querystring.split('=')[1];
+    page = ctx.querystring.split('=')[1]
   }
   await checkLogin(ctx)
   await apiModel.findData('videos').then(res => {
@@ -94,6 +94,66 @@ router.post('/upload', async (ctx, next) => {
   })
 })
 
+// edit video get
+router.get('/edit/:id', async (ctx, next) => {
+  let data
+  await apiModel.findVideoById(ctx.params.id).then(res => {
+    data = JSON.parse(JSON.stringify(res))
+  })
+  await ctx.render('edit', {
+    session: ctx.session,
+    video: data[0]
+  })
+})
+
+// edit video post
+router.post('/edit/:id', async (ctx, next) => {
+  let i_body = Object.assign({}, ctx.request.body)
+  let {name, release_time, duration, actors, country, classify, star, type, detail} = i_body
+  let image
+  console.log(ctx.uploadpath)
+  if (!ctx.uploadpath) {
+    image = i_body['image']
+  } else {
+    image = ctx.uploadpath.newImage
+  }
+  let data = [name, country, classify, release_time, image, star, duration, type, actors, detail, ctx.params.id]
+  await Promise.all([
+    apiModel.updateFavoritesVideoName([name, ctx.params.id]),
+    apiModel.updateCommentsVideoName([name, ctx.params.id]),
+    apiModel.updateVideoHasImg(data),
+    apiModel.updateFavirotesVideoImg([image, ctx.params.id])
+  ]).then(res => {
+    console.log(res)
+    ctx.body = {
+      code: 200,
+      message: '修改成功'
+    }
+  }).catch((res) => {
+    console.log(res)
+    ctx.body = {
+      code: 500,
+      message: '修改失败'
+    }
+  })
+})
+
+// video 删除
+router.post('/delete/:id', async (ctx, next) => {
+  await apiModel.deleteVideoById(ctx.params.id).then(res => {
+    console.log(res)
+    ctx.body = {
+      code: 200,
+      message: '删除成功'
+    }
+  }).catch((res) => {
+    console.log(res)
+    ctx.body = {
+      code: 500,
+      message: '删除失败'
+    }
+  })
+})
 // 管理员列表
 router.get('/adminUser', async (ctx, next) => {
   let page, dataLength = '', data
@@ -103,7 +163,7 @@ router.get('/adminUser', async (ctx, next) => {
     page = ctx.querystring.split('=')[1]
   }
   await apiModel.findData('admin_users').then(res => {
-      dataLength = res.length
+    dataLength = res.length
   })
   await apiModel.findPageData('admin_users', page, 15).then(res => {
     data = res

@@ -1,0 +1,259 @@
+<% include header %>
+<div class="ui grid" style="height: 100%;">
+    <div class="two wide column" style="height: 100%; background-color: #1b1c1d;">
+        <% include navbar %>
+    </div>
+    <div class="thirteen wide centered column" style="margin-top: 30px;">
+        <div onsubmit="return" class="ui form">
+            <div class="field">
+                <label>名称</label>
+                <input type="text" name="name" placeholder="名称" value="<%= video.name %>">
+            </div>
+            <div class="three fields">
+                <div class="field">
+                    <label>国家</label>
+                    <select class="ui search fluid dropdown" name="country">
+                        <option value="">国家</option>
+                        <option value="中国">🇨🇳中国</option>
+                        <option value="美国">🇺🇸美国</option>
+                        <option value="英国">🇬🇧英国</option>
+                        <option value="法国">🇫🇷法国</option>
+                        <option value="日本">🇯🇵日本</option>
+                        <option value="泰国">🇹🇭泰国</option>
+                        <option value="韩国">🇰🇷韩国</option>
+                        <option value="印度">🇮🇳印度</option>
+                        <option value="其它">其它</option>
+                        <option selected value="<%= video.country %>"><%= video.country %></option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>分类</label>
+                    <select class="ui search fluid dropdown" name="classify">
+                        <option value="">分类</option>
+                        <option value="电影">电影</option>
+                        <option value="电视剧">电视剧</option>
+                        <option value="综艺">综艺</option>
+                        <option value="动漫">动漫</option>
+                        <option value="纪录片">纪录片</option>
+                        <option value="其它">其它</option>
+                        <option selected value="<%= video.classify %>"><%= video.classify %></option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>上映时间</label>
+                    <input type="date" name="release_time" placeholder="上映时间" value="<%= video.release_time %>">
+                </div>
+            </div>
+            <div class="field">
+                <label>图片</label>
+                <input type="hidden" name="image" value="<%= video.image %>">
+                <input type="file" name="newImage" multiple>
+            </div>
+            <div class="three fields">
+                <div class="field">
+                    <label>评分</label>
+                    <select class="ui search fluid dropdown" name="star">
+                        <option value="">评分</option>
+                        <option value="10.0">10.0</option>
+                        <option value="9.0">9.0</option>
+                        <option value="8.0">8.0</option>
+                        <option value="7.0">7.0</option>
+                        <option value="6.0">6.0</option>
+                        <option value="5.0">5.0</option>
+                        <option value="4.0">4.0</option>
+                        <option value="3.0">3.0</option>
+                        <option value="2.0">2.0</option>
+                        <option value="1.0">1.0</option>
+                        <option selected value="<%= video.star %>"><%= video.star %></option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>时长</label>
+                    <input type="text" name="duration" placeholder="时长" value="<%= video.duration %>">
+                </div>
+                <div class="field">
+                    <label>类型</label>
+                    <select class="ui search fluid dropdown" name="type">
+                        <option value="">类型</option>
+                        <option value="动作">动作</option>
+                        <option value="喜剧">喜剧</option>
+                        <option value="爱情">爱情</option>
+                        <option value="剧情">剧情</option>
+                        <option value="古装">古装</option>
+                        <option value="历史">历史</option>
+                        <option value="战争">战争</option>
+                        <option value="科幻">科幻</option>
+                        <option value="惊悚">惊悚</option>
+                        <option value="恐怖">恐怖</option>
+                        <option value="冒险">冒险</option>
+                        <option value="纪录片">纪录片</option>
+                        <option value="武侠">武侠</option>
+                        <option value="动画">动画</option>
+                        <option value="犯罪">犯罪</option>
+                        <option value="脱口秀">脱口秀</option>
+                        <option value="成人">成人</option>
+                        <option value="儿童">儿童</option>
+                        <option selected value="<%= video.type %>"><%= video.type %></option>
+                    </select>
+                </div>
+            </div>
+            <div class="field">
+                <label>导演/演员</label>
+                <input type="text" name="actors" placeholder="导演/演员" value="<%= video.actors %>">
+            </div>
+            <div class="field">
+                <label>描述</label>
+                <textarea name="detail" placeholder="导演/演员"><%= video.detail %></textarea>
+            </div>
+            <div class="ui button submit">Submit</div>
+        </div>
+    </div>
+</div>
+
+<script>
+  $(function () {
+    $('select.dropdown').dropdown()
+    let formdata = new FormData()
+    formdata.append('image', $('input[name=image]').val())
+    $('input[name=newImage]').change(function (e) {
+      console.log(e.target)
+      formdata.append('newImage', e.target.files[0])
+    })
+    let isAllow = true
+    if (!isAllow) return
+    $('.ui.form')
+      .form({
+        inline: true,
+        on: 'blur',
+        onSuccess: function () {
+          isAllow = false
+          let inputArr = Array.of('name', 'release_time', 'duration', 'actors')
+          if (inputArr) {
+            inputArr.forEach(function (val) {
+              formdata.append(val, $('input[name=' + val + ']').val())
+            })
+          }
+          let selectArr = Array.of('country', 'classify', 'star', 'type')
+          if (selectArr) {
+            selectArr.forEach(function (val) {
+              formdata.append(val, $('select[name=' + val + ']').val())
+            })
+          }
+          formdata.append('detail', $('textarea').val())
+          $.ajax({
+            url: location.pathname,
+            type: 'POST',
+            cache: false,
+            data: formdata,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            success: function (data) {
+              isAllow = true
+              if (data.code === 200) {
+                alert('修改成功')
+                location.href = '/'
+                formdata = new FormData()
+              } else {
+                alert('修改失败')
+                formdata = new FormData()
+              }
+            }
+          })
+        },
+        fields: {
+          name: {
+            identifier: 'name',
+            rules: [
+              {
+                type: 'empty',
+                prompt: '请输入名称！'
+              }
+            ]
+          },
+          country: {
+            identifier: 'country',
+            rules: [
+              {
+                type: 'empty',
+                prompt: '请输入国家！'
+              }
+            ]
+          },
+          classify: {
+            identifier: 'classify',
+            rules: [
+              {
+                type: 'empty',
+                prompt: '请输入分类！'
+              }
+            ]
+          },
+          release_time: {
+            identifier: 'release_time',
+            rules: [
+              {
+                type: 'empty',
+                prompt: '请输入时间！'
+              }
+            ]
+          },
+          image: {
+            identifier: 'image',
+            rules: [
+              {
+                type: 'empty',
+                prompt: '请上传图片！'
+              }
+            ]
+          },
+          star: {
+            identifier: 'star',
+            rules: [
+              {
+                type: 'empty',
+                prompt: '请输入评分！'
+              }
+            ]
+          },
+          duration: {
+            identifier: 'duration',
+            rules: [
+              {
+                type: 'empty',
+                prompt: '请输入时长！'
+              }
+            ]
+          },
+          type: {
+            identifier: 'type',
+            rules: [
+              {
+                type: 'empty',
+                prompt: '请输入类型！'
+              }
+            ]
+          },
+          actors: {
+            identifier: 'actors',
+            rules: [
+              {
+                type: 'empty',
+                prompt: '请输入导演和演员！'
+              }
+            ]
+          },
+          detail: {
+            identifier: 'detail',
+            rules: [
+              {
+                type: 'empty',
+                prompt: '请输入描述！'
+              }
+            ]
+          },
+        }
+      })
+  })
+</script>
+<% include footer %>

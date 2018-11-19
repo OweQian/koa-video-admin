@@ -25,7 +25,7 @@
                 <td><%= video.name %></td>
                 <td><%= video.country %></td>
                 <td><%= video.release_time %></td>
-                <td><img src="./upload/<%= video.image %>" alt=""></td>
+                <td><img src="./upload/<%= video.image %>" width="40" height="40" alt=""></td>
                 <td><%= video.star %></td>
                 <td><%= video.duration %></td>
                 <td><%= video.type %></td>
@@ -35,8 +35,8 @@
                     <a href="/edit/<%= video.id %>">
                         <button class="ui icon primary basic button" title="edit"><i class="edit icon"></i></button>
                     </a>
-                    <button v-id="<%= video.id %>" class="ui icon negative basic button" title="delete"><i
-                                class="erase icon"></i></button>
+                    <button v-id="<%= video.id %>" class="ui icon negative basic button delete" title="delete"><i
+                                v-id="<%= video.id %>" class="erase icon"></i></button>
                 </td>
             </tr>
 
@@ -52,4 +52,23 @@
         </table>
     </div>
 </div>
+<script>
+    $('.ui.dropdown').dropdown()
+    $(function () {
+      $('.delete').click((e) => {
+        $.ajax({
+          url: `/delete/${e.target.getAttribute('v-id')}`,
+          type: 'POST',
+          success: function (res) {
+            if (res.code === 200) {
+              alert('删除成功')
+            } else {
+              alert('删除失败')
+            }
+            location.href = '/'
+          }
+        })
+      })
+    })
+</script>
 <% include footer %>
