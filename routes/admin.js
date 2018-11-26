@@ -74,11 +74,12 @@ router.get('/upload', async (ctx, next) => {
 
 // 上传video数据
 router.post('/upload', async (ctx, next) => {
-  let i_body = Object.assign({}, ctx.request.body)
+  let i_body = Object.assign({}, ctx.request.body.fields)
+  console.log(i_body)
   let {name, release_time, duration, actors, country, classify, star, type, detail} = i_body
   let image = ctx.uploadpath.image
   let data = [name, country, classify, release_time, image, star, duration, type, actors, detail]
-  console.log(ctx.uploadpath)
+  console.log(data)
   await apiModel.insertVideo(data).then((res) => {
     console.log(res)
     ctx.body = {
