@@ -27,10 +27,9 @@
     "md5": "^2.2.1",
     "mocha": "^5.2.0",
     "moment": "^2.22.2",
-    "mysql": "^2.16.0"
+    "mysql": "^2.14.1"
   },
   "dependencies": {
-    "env2": "^2.2.2",
     "koa-logger": "^3.2.0",
     "trek-captcha": "^0.4.0"
   }
