@@ -52,10 +52,10 @@ app.use(views(path.join(__dirname, './views'), {
 app.use(compress({threshold: 2048}))
 
 // koa-body
-const getUploadFileExt = require('./utils/getUploadFileExt');
-const getUploadFileName = require('./utils/getUploadFileName');
-const checkDirExist = require('./utils/checkDirExist');
-const getUploadDirName = require('./utils/getUploadDirName');
+const getUploadFileExt = require('./utils/getUploadFileExt')
+const getUploadFileName = require('./utils/getUploadFileName')
+const checkDirExist = require('./utils/checkDirExist')
+const getUploadDirName = require('./utils/getUploadDirName')
 
 app.use(koaBody({
     multipart: true, // 支持文件上传
@@ -66,18 +66,18 @@ app.use(koaBody({
       onFileBegin: (name, file) => {
         // console.log(file);
         // 获取文件后缀
-        const ext = getUploadFileExt(file.name);
+        const ext = getUploadFileExt(file.name)
         // 最终要保存到的文件夹目录
-        const dirName = getUploadDirName();
-        const dir = path.join(__dirname, `public/upload/${dirName}`);
+        const dirName = getUploadDirName()
+        const dir = path.join(__dirname, `public/upload/${dirName}`)
         // 检查文件夹是否存在如果不存在则新建文件夹
-        checkDirExist(dir);
+        checkDirExist(dir)
         // 获取文件名称
-        const fileName = getUploadFileName(ext);
+        const fileName = getUploadFileName(ext)
         // 重新覆盖 file.path 属性
-        file.path = `${dir}/${fileName}`;
-        app.context.uploadpath = app.context.uploadpath ? app.context.uploadpath : {};
-        app.context.uploadpath[name] = `${dirName}/${fileName}`;
+        file.path = `${dir}/${fileName}`
+        app.context.uploadpath = app.context.uploadpath ? app.context.uploadpath : {}
+        app.context.uploadpath[name] = `${dirName}/${fileName}`
       }
     }
   }
