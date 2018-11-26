@@ -4,7 +4,7 @@ module.exports = {
   PORT: 3000,
   // 数据库配置
   DATABASE: {
-    NAME: 'koaSql',
+    NAME: 'koa',
     USERNAME: 'root',
     PASSWORD: '123456',
     PORT: '3306',
