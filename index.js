@@ -11,11 +11,6 @@ const logger = require('koa-logger')
 const compress = require('koa-compress')
 const koaBody = require('koa-body')
 const StaticCache = require('koa-static-cache')
-// koa-body
-const getUploadFileExt = require('./utils/getUploadFileExt')
-const getUploadFileName = require('./utils/getUploadFileName')
-const checkDirExist = require('./utils/checkDirExist')
-const getUploadDirName = require('./utils/getUploadDirName')
 
 const app = new Koa()
 const route = new Router()
