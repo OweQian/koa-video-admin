@@ -44,7 +44,7 @@
             </div>
             <div class="field">
                 <label>图片</label>
-                <input type="file" name="image" multiple>
+                <input type="file" name="file" multiple>
             </div>
             <div class="three fields">
                 <div class="field">
@@ -111,9 +111,9 @@
   $(function () {
     $('select.dropdown').dropdown()
     let formdata = new FormData()
-    $('input[name=image]').change(function (e) {
+    $('input[name=file]').change(function (e) {
       console.log(e.target)
-      formdata.append('image', e.target.files[0])
+      formdata.append('file', e.target.files[0])
     })
     let isAllow = true
     if (!isAllow) return
@@ -194,8 +194,8 @@
               }
             ]
           },
-          image: {
-            identifier: 'image',
+          file: {
+            identifier: 'file',
             rules: [
               {
                 type: 'empty',

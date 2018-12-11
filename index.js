@@ -56,27 +56,12 @@ app.use(views(path.join(__dirname, './views'), {
 app.use(compress({threshold: 2048}))
 
 app.use(koaBody({
-    multipart: true, // 支持文件上传
+    multipart: true,
+    "formLimit": "5mb",
+    "jsonLimit": "5mb",
+    "textLimit": "5mb",
     formidable: {
-      uploadDir: path.join(__dirname, './public/upload'), // 设置文件上传目录
-      keepExtensions: true, // 保持文件后缀名
-      maxFieldsSize: 2 * 1024 * 1024, // 文件上传大小
-      onFileBegin: function (name, file) {
-        // console.log(file);
-        // 获取文件后缀
-        const ext = getUploadFileExt(file.name)
-        // 最终要保存到的文件夹目录
-        const dirName = getUploadDirName()
-        const dir = path.join(__dirname, `public/upload/${dirName}`)
-        // 检查文件夹是否存在如果不存在则新建文件夹
-        checkDirExist(dir)
-        // 获取文件名称
-        const fileName = getUploadFileName(ext)
-        // 重新覆盖 file.path 属性
-        file.path = `${dir}/${fileName}`
-        app.context.uploadpath = app.context.uploadpath ? app.context.uploadpath : {}
-        app.context.uploadpath[name] = `${dirName}/${fileName}`
-      }
+      uploadDir: './public/images'
     }
   }
 ))

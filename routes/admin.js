@@ -8,7 +8,6 @@ router.get('/', async (ctx, next) => {
   let data
   let page
   let dataLength
-  console.log(ctx.querystring)
   if (ctx.querystring === '') {
     page = 1
   } else {
@@ -74,11 +73,11 @@ router.get('/upload', async (ctx, next) => {
 
 // 上传video数据
 router.post('/upload', async (ctx, next) => {
-  let i_body = Object.assign({}, ctx.request.body.fields)
+  let i_body = Object.assign({}, ctx.request.body)
   console.log(i_body)
-  let {name, release_time, duration, actors, country, classify, star, type, detail} = i_body
-  let image = ctx.uploadpath.image
-  let data = [name, country, classify, release_time, image, star, duration, type, actors, detail]
+  let {name, release_time, duration, actors, country, classify, star, type, detail} = i_body['fields']
+  let image = i_body['files']['file']['path']
+  let data = [name, country, classify, release_time, image.match(/\w+/g)[2], star, duration, type, actors, detail]
   console.log(data)
   await apiModel.insertVideo(data).then((res) => {
     console.log(res)
@@ -110,13 +109,12 @@ router.get('/edit/:id', async (ctx, next) => {
 // edit video post
 router.post('/edit/:id', async (ctx, next) => {
   let i_body = Object.assign({}, ctx.request.body)
-  let {name, release_time, duration, actors, country, classify, star, type, detail} = i_body
-  let image
-  console.log(ctx.uploadpath)
-  if (!ctx.uploadpath) {
-    image = i_body['image']
+  let {name, release_time, duration, actors, country, classify, star, file, type, detail} = i_body['fields']
+  let image = ''
+  if (Object.keys(i_body['files']).length === 0) {
+    image = file
   } else {
-    image = ctx.uploadpath.newImage
+    image = i_body['files']['newFile']['path'].match(/\w+/g)[2]
   }
   let data = [name, country, classify, release_time, image, star, duration, type, actors, detail, ctx.params.id]
   await Promise.all([

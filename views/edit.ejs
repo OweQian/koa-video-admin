@@ -47,7 +47,7 @@
             <div class="field">
                 <label>图片</label>
                 <input type="hidden" name="image" value="<%= video.image %>">
-                <input type="file" name="newImage" multiple>
+                <input type="file" name="newFile" multiple>
             </div>
             <div class="three fields">
                 <div class="field">
@@ -115,9 +115,9 @@
     $('select.dropdown').dropdown()
     let formdata = new FormData()
     formdata.append('image', $('input[name=image]').val())
-    $('input[name=newImage]').change(function (e) {
+    $('input[name=newFile]').change(function (e) {
       console.log(e.target)
-      formdata.append('newImage', e.target.files[0])
+      formdata.append('newFile', e.target.files[0])
     })
     let isAllow = true
     if (!isAllow) return
