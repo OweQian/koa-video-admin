@@ -1,4 +1,2 @@
 * linguist-vendored
-*.node linguist-vendored=false
 *.koa2 linguist-vendored=false
-*.mysql linguist-vendored=false
