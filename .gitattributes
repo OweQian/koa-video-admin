@@ -1,0 +1,3 @@
+*.node linguist-language=java
+*.koa2 linguist-language=java
+*.mysql linguist-language=java
