@@ -75,9 +75,10 @@ router.get('/upload', async (ctx, next) => {
 router.post('/upload', async (ctx, next) => {
   let i_body = Object.assign({}, ctx.request.body)
   console.log(i_body)
-  let {name, release_time, duration, actors, country, classify, star, type, detail} = i_body['fields']
+  let {name, release_time, duration, country, classify, star, detail} = i_body['fields']
   let image = i_body['files']['file']['path']
-  let data = [name, country, classify, release_time, image.match(/\w+/g)[2], star, duration, type, actors, detail]
+  let video_file = i_body['files']['video_file']['path']
+  let data = [name, country, classify, release_time, image.match(/\w+/g)[2], video_file.match(/\w+/g)[2], star, duration, detail]
   console.log(data)
   await apiModel.insertVideo(data).then((res) => {
     console.log(res)
@@ -109,14 +110,17 @@ router.get('/edit/:id', async (ctx, next) => {
 // edit video post
 router.post('/edit/:id', async (ctx, next) => {
   let i_body = Object.assign({}, ctx.request.body)
-  let {name, release_time, duration, actors, country, classify, star, file, type, detail} = i_body['fields']
+  let {name, release_time, duration, country, classify, star, file, video_file, detail} = i_body['fields']
   let image = ''
+  let video_path = ''
   if (Object.keys(i_body['files']).length === 0) {
     image = file
+    video_path = video_file
   } else {
-    image = i_body['files']['newFile']['path'].match(/\w+/g)[2]
+    image = i_body['files']['newFile']['path']
+    video_path = i_body['files']['newVideoFile']['path']
   }
-  let data = [name, country, classify, release_time, image, star, duration, type, actors, detail, ctx.params.id]
+  let data = [name, country, classify, release_time, image.match(/\w+/g)[2], video_file.match(/\w+/g)[2], star, duration, detail, ctx.params.id]
   await Promise.all([
     apiModel.updateFavoritesVideoName([name, ctx.params.id]),
     apiModel.updateCommentsVideoName([name, ctx.params.id]),

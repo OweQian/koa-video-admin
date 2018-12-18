@@ -29,22 +29,35 @@
                     <label>分类</label>
                     <select class="ui search fluid dropdown" name="classify">
                         <option value="">分类</option>
-                        <option value="电影">电影</option>
-                        <option value="电视剧">电视剧</option>
-                        <option value="综艺">综艺</option>
-                        <option value="动漫">动漫</option>
-                        <option value="纪录片">纪录片</option>
+                        <option value="军事">军事</option>
+                        <option value="搞笑">搞笑</option>
+                        <option value="音乐">音乐</option>
+                        <option value="新闻">新闻</option>
+                        <option value="娱乐">娱乐</option>
+                        <option value="体育">体育</option>
+                        <option value="游戏">游戏</option>
+                        <option value="时尚">时尚</option>
+                        <option value="生活">生活</option>
+                        <option value="母婴">母婴</option>
+                        <option value="汽车">汽车</option>
+                        <option value="教育">教育</option>
+                        <option value="科技">科技</option>
+                        <option value="旅游">旅游</option>
                         <option value="其它">其它</option>
                     </select>
                 </div>
                 <div class="field">
-                    <label>上映时间</label>
-                    <input type="date" name="release_time" placeholder="上映时间">
+                    <label>上传时间</label>
+                    <input type="date" name="release_time" placeholder="上传时间">
                 </div>
             </div>
             <div class="field">
-                <label>图片</label>
+                <label>封面</label>
                 <input type="file" name="file" multiple>
+            </div>
+            <div class="field">
+                <label>视频</label>
+                <input type="file" name="video_file" multiple>
             </div>
             <div class="three fields">
                 <div class="field">
@@ -67,38 +80,10 @@
                     <label>时长</label>
                     <input type="text" name="duration" placeholder="时长">
                 </div>
-                <div class="field">
-                    <label>类型</label>
-                    <select class="ui search fluid dropdown" name="type">
-                        <option value="">类型</option>
-                        <option value="动作">动作</option>
-                        <option value="喜剧">喜剧</option>
-                        <option value="爱情">爱情</option>
-                        <option value="剧情">剧情</option>
-                        <option value="古装">古装</option>
-                        <option value="历史">历史</option>
-                        <option value="战争">战争</option>
-                        <option value="科幻">科幻</option>
-                        <option value="惊悚">惊悚</option>
-                        <option value="恐怖">恐怖</option>
-                        <option value="冒险">冒险</option>
-                        <option value="纪录片">纪录片</option>
-                        <option value="武侠">武侠</option>
-                        <option value="动画">动画</option>
-                        <option value="犯罪">犯罪</option>
-                        <option value="脱口秀">脱口秀</option>
-                        <option value="成人">成人</option>
-                        <option value="儿童">儿童</option>
-                    </select>
-                </div>
-            </div>
-            <div class="field">
-                <label>导演/演员</label>
-                <input type="text" name="actors" placeholder="导演/演员">
             </div>
             <div class="field">
                 <label>描述</label>
-                <textarea name="detail" placeholder="导演/演员"></textarea>
+                <textarea name="detail" placeholder="添加描述"></textarea>
             </div>
             <div class="ui button submit">Submit</div>
             <div class="ui button reset">重置</div>
@@ -115,6 +100,10 @@
       console.log(e.target)
       formdata.append('file', e.target.files[0])
     })
+    $('input[name=video_file]').change(function (e) {
+      console.log(e.target)
+      formdata.append('video_file', e.target.files[0])
+    })
     let isAllow = true
     if (!isAllow) return
     $('.ui.form')
@@ -123,13 +112,13 @@
         on: 'blur',
         onSuccess: function () {
           isAllow = false
-          let inputArr = Array.of('name', 'release_time', 'duration', 'actors')
+          let inputArr = Array.of('name', 'release_time', 'duration')
           if (inputArr) {
             inputArr.forEach(function (val) {
               formdata.append(val, $('input[name=' + val + ']').val())
             })
           }
-          let selectArr = Array.of('country', 'classify', 'star', 'type')
+          let selectArr = Array.of('country', 'classify', 'star')
           if (selectArr) {
             selectArr.forEach(function (val) {
               formdata.append(val, $('select[name=' + val + ']').val())
@@ -203,6 +192,15 @@
               }
             ]
           },
+          video_file: {
+            identifier: 'video_file',
+            rules: [
+              {
+                type: 'empty',
+                prompt: '请上传视频！'
+              }
+            ]
+          },
           star: {
             identifier: 'star',
             rules: [
@@ -218,24 +216,6 @@
               {
                 type: 'empty',
                 prompt: '请输入时长！'
-              }
-            ]
-          },
-          type: {
-            identifier: 'type',
-            rules: [
-              {
-                type: 'empty',
-                prompt: '请输入类型！'
-              }
-            ]
-          },
-          actors: {
-            identifier: 'actors',
-            rules: [
-              {
-                type: 'empty',
-                prompt: '请输入导演和演员！'
               }
             ]
           },

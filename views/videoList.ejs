@@ -10,13 +10,12 @@
                 <th>名称</th>
                 <th>国家</th>
                 <th>分类</th>
-                <th>上映时间</th>
+                <th>上传时间</th>
+                <th>封面</th>
+                <th>视频</th>
                 <th>评分</th>
                 <th>时长</th>
-                <th>类型</th>
-                <th>导演/演员</th>
                 <th>描述</th>
-                <th>操作</th>
             </tr>
             </thead>
             <tbody>
@@ -24,12 +23,19 @@
             <tr>
                 <td><%= video.name %></td>
                 <td><%= video.country %></td>
+                <td><%= video.classify %></td>
                 <td><%= video.release_time %></td>
                 <td><img src="./images/<%= video.image %>" width="40" height="40" alt=""></td>
+                <td>
+                    <!--<video src="./images/<%= video.image %>" width="400" height="400" alt="">-->
+                    <video width="98" height="98" controls>
+                        <source src="./images/<%= video.video_path %>" type="video/mp4">
+                        <!--<source src="movie.ogg" type="video/ogg">-->
+                        Your browser does not support the video tag.
+                    </video>
+                </td>
                 <td><%= video.star %></td>
                 <td><%= video.duration %></td>
-                <td><%= video.type %></td>
-                <td><%= video.actors %></td>
                 <td><%= video.detail %></td>
                 <td>
                     <a href="/edit/<%= video.id %>">
@@ -53,22 +59,22 @@
     </div>
 </div>
 <script>
-    $('.ui.dropdown').dropdown()
-    $(function () {
-      $('.delete').click((e) => {
-        $.ajax({
-          url: `/delete/${e.target.getAttribute('v-id')}`,
-          type: 'POST',
-          success: function (res) {
-            if (res.code === 200) {
-              alert('删除成功')
-            } else {
-              alert('删除失败')
-            }
-            location.href = '/'
+  $('.ui.dropdown').dropdown()
+  $(function () {
+    $('.delete').click((e) => {
+      $.ajax({
+        url: `/delete/${e.target.getAttribute('v-id')}`,
+        type: 'POST',
+        success: function (res) {
+          if (res.code === 200) {
+            alert('删除成功')
+          } else {
+            alert('删除失败')
           }
-        })
+          location.href = '/'
+        }
       })
     })
+  })
 </script>
 <% include footer %>
