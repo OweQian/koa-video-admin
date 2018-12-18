@@ -17,7 +17,7 @@ router.get('/', async (ctx, next) => {
   await apiModel.findData('videos').then(res => {
     dataLength = res.length
   })
-  await apiModel.findPageData('videos', page, 15).then(res => {
+  await apiModel.findPageData('videos', page, 5).then(res => {
     data = JSON.parse(JSON.stringify(res))
     console.log(res)
   })
@@ -110,17 +110,26 @@ router.get('/edit/:id', async (ctx, next) => {
 // edit video post
 router.post('/edit/:id', async (ctx, next) => {
   let i_body = Object.assign({}, ctx.request.body)
-  let {name, release_time, duration, country, classify, star, file, video_file, detail} = i_body['fields']
-  let image = ''
-  let video_path = ''
-  if (Object.keys(i_body['files']).length === 0) {
-    image = file
-    video_path = video_file
+  let {name, release_time, duration, country, classify, star, image, video_path, detail} = i_body['fields']
+  console.log(i_body['fields'])
+  let file = ''
+  let video_file = ''
+  if (i_body['files']['newFile']) {
+    file = i_body['files']['newFile']['path']
+    file = file.match(/\w+/g)[2]
   } else {
-    image = i_body['files']['newFile']['path']
-    video_path = i_body['files']['newVideoFile']['path']
+    file = image
   }
-  let data = [name, country, classify, release_time, image.match(/\w+/g)[2], video_file.match(/\w+/g)[2], star, duration, detail, ctx.params.id]
+  if (i_body['files']['newVideoFile']) {
+    video_file = i_body['files']['newVideoFile']['path']
+    video_file = video_file.match(/\w+/g)[2]
+  } else {
+    video_file = video_path
+  }
+  console.log(file)
+  console.log(video_file)
+  let data = [name, country, classify, release_time, file, video_file, star, duration, detail, ctx.params.id]
+  console.log(data)
   await Promise.all([
     apiModel.updateFavoritesVideoName([name, ctx.params.id]),
     apiModel.updateCommentsVideoName([name, ctx.params.id]),
