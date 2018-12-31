@@ -1,60 +1,20 @@
-const router = require('koa-router')()
+const router = require('koa-router')({
+  preffix: '/admin'
+})
+
+const controllers = require('../controllers')
 const apiModel = require('../lib/mysql')
 const path = require('path')
 const fs = require('fs')
 const checkLogin = require('../middlewares/check').checkLogin
 
-router.get('/', async (ctx, next) => {
-  let data
-  let page
-  let dataLength
-  if (ctx.querystring === '') {
-    page = 1
-  } else {
-    page = ctx.querystring.split('=')[1]
-  }
-  await checkLogin(ctx)
-  await apiModel.findData('videos').then(res => {
-    dataLength = res.length
-  })
-  await apiModel.findPageData('videos', page, 5).then(res => {
-    data = JSON.parse(JSON.stringify(res))
-    console.log(res)
-  })
-  await ctx.render('videoList', {
-    videos: data,
-    session: ctx.session,
-    type: 'videoList',
-    dataLength: Math.ceil(dataLength / 15),
-    nowPage: parseInt(page)
-  })
-})
 // 登录视图
 router.get('/login', async (ctx, next) => {
-  // ctx.router available
   if (ctx.session.user) {
     await ctx.redirect('/')
   } else {
     await ctx.render('login')
   }
-})
-
-// 注册、登录
-router.post('/login', async (ctx, next) => {
-  let {username, password} = ctx.request.body
-  console.log(ctx.request.body)
-  await apiModel.findUserByName(username)
-    .then(res => {
-      if (res[0].username === username) {
-        ctx.session.user = username
-        ctx.session.password = password
-      }
-    }).catch(() => {
-      ctx.session.user = username
-      ctx.session.password = password
-      apiModel.addUser([username, password])
-    })
-  await ctx.redirect('/')
 })
 
 // 退出
@@ -71,30 +31,6 @@ router.get('/upload', async (ctx, next) => {
   })
 })
 
-// 上传video数据
-router.post('/upload', async (ctx, next) => {
-  let i_body = Object.assign({}, ctx.request.body)
-  console.log(i_body)
-  let {name, release_time, duration, country, classify, star, detail} = i_body['fields']
-  let image = i_body['files']['file']['path']
-  let video_file = i_body['files']['video_file']['path']
-  let data = [name, country, classify, release_time, image.match(/\w+/g)[2], video_file.match(/\w+/g)[2], star, duration, detail]
-  console.log(data)
-  await apiModel.insertVideo(data).then((res) => {
-    console.log(res)
-    ctx.body = {
-      code: 200,
-      message: '上传成功'
-    }
-  }).catch((res) => {
-    console.log(res)
-    ctx.body = {
-      code: 500,
-      message: '上传失败'
-    }
-  })
-})
-
 // edit video get
 router.get('/edit/:id', async (ctx, next) => {
   let data
@@ -107,155 +43,29 @@ router.get('/edit/:id', async (ctx, next) => {
   })
 })
 
-// edit video post
-router.post('/edit/:id', async (ctx, next) => {
-  let i_body = Object.assign({}, ctx.request.body)
-  let {name, release_time, duration, country, classify, star, image, video_path, detail} = i_body['fields']
-  console.log(i_body['fields'])
-  let file = ''
-  let video_file = ''
-  if (i_body['files']['newFile']) {
-    file = i_body['files']['newFile']['path']
-    file = file.match(/\w+/g)[2]
-  } else {
-    file = image
-  }
-  if (i_body['files']['newVideoFile']) {
-    video_file = i_body['files']['newVideoFile']['path']
-    video_file = video_file.match(/\w+/g)[2]
-  } else {
-    video_file = video_path
-  }
-  console.log(file)
-  console.log(video_file)
-  let data = [name, country, classify, release_time, file, video_file, star, duration, detail, ctx.params.id]
-  console.log(data)
-  await Promise.all([
-    apiModel.updateFavoritesVideoName([name, ctx.params.id]),
-    apiModel.updateCommentsVideoName([name, ctx.params.id]),
-    apiModel.updateVideoHasImg(data),
-    apiModel.updateFavirotesVideoImg([image, ctx.params.id])
-  ]).then(res => {
-    console.log(res)
-    ctx.body = {
-      code: 200,
-      message: '修改成功'
-    }
-  }).catch((res) => {
-    console.log(res)
-    ctx.body = {
-      code: 500,
-      message: '修改失败'
-    }
-  })
-})
+router.get('/', controllers.admin.videoList)
+
+// 注册、登录
+router.post('/login', controllers.admin.login)
+
+// 上传video数据
+router.post('/upload', controllers.admin.addVideo)
+
+// edit video
+router.post('/edit/:id', controllers.admin.editVideo)
 
 // video 删除
-router.post('/delete/:id', async (ctx, next) => {
-  await apiModel.deleteVideoById(ctx.params.id).then(res => {
-    console.log(res)
-    ctx.body = {
-      code: 200,
-      message: '删除成功'
-    }
-  }).catch((res) => {
-    console.log(res)
-    ctx.body = {
-      code: 500,
-      message: '删除失败'
-    }
-  })
-})
+router.delete('/delete', controllers.admin.deleteVideo)
 // 管理员列表
-router.get('/adminUser', async (ctx, next) => {
-  let page, dataLength = '', data
-  if (ctx.querystring === '') {
-    page = 1
-  } else {
-    page = ctx.querystring.split('=')[1]
-  }
-  await apiModel.findData('admin_users').then(res => {
-    dataLength = res.length
-  })
-  await apiModel.findPageData('admin_users', page, 15).then(res => {
-    data = res
-  })
-  await ctx.render('adminUser', {
-    session: ctx.session,
-    dataLength: Math.ceil(dataLength / 15),
-    nowPage: parseInt(page),
-    type: 'adminUser',
-    users: data
-  })
-})
+router.get('/adminUser', controllers.admin.adminUserList)
 
 // 手机用户列表
-router.get('/mobileUser', async (ctx, next) => {
-  let page, dataLength = '', data
-  if (ctx.querystring === '') {
-    page = 1
-  } else {
-    page = ctx.querystring.split('=')[1]
-  }
-  await apiModel.findData('mobile_users').then(res => {
-    dataLength = res.length
-  })
-  await apiModel.findPageData('mobile_users', page, 15).then(res => {
-    data = res
-  })
-  await ctx.render('mobileUser', {
-    session: ctx.session,
-    dataLength: Math.ceil(dataLength / 15),
-    nowPage: parseInt(page),
-    type: 'mobileUser',
-    users: data
-  })
-})
+router.get('/mobileUser', controllers.admin.mobileUserList)
 
 // 评论列表
-router.get('/comments', async (ctx, next) => {
-  let page, dataLength = '', data
-  if (ctx.querystring === '') {
-    page = 1
-  } else {
-    page = ctx.querystring.split('=')[1]
-  }
-  await apiModel.findData('comments').then(res => {
-    dataLength = res.length
-  })
-  await apiModel.findPageData('comments', page, 15).then(res => {
-    data = res
-  })
-  await ctx.render('comments', {
-    session: ctx.session,
-    dataLength: Math.ceil(dataLength / 15),
-    nowPage: parseInt(page),
-    type: 'comments',
-    comments: data
-  })
-})
+router.get('/comments', controllers.admin.commentList)
 
 // 喜欢、不喜欢
-router.get('/favorites', async (ctx, next) => {
-  let page, dataLength = '', data
-  if (ctx.querystring === '') {
-    page = 1
-  } else {
-    page = ctx.querystring.split('=')[1]
-  }
-  await apiModel.findData('favorites').then(res => {
-    dataLength = res.length
-  })
-  await apiModel.findPageData('favorites', page, 15).then(res => {
-    data = res
-  })
-  await ctx.render('favorites', {
-    session: ctx.session,
-    dataLength: Math.ceil(dataLength / 15),
-    nowPage: parseInt(page),
-    type: 'favorites',
-    favorites: data
-  })
-})
+router.get('/favorites', controllers.admin.favoriteList)
 
 module.exports = router

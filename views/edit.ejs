@@ -14,15 +14,15 @@
                     <label>国家</label>
                     <select class="ui search fluid dropdown" name="country">
                         <option value="">国家</option>
-                        <option value="中国">🇨🇳中国</option>
-                        <option value="美国">🇺🇸美国</option>
-                        <option value="英国">🇬🇧英国</option>
-                        <option value="法国">🇫🇷法国</option>
-                        <option value="日本">🇯🇵日本</option>
-                        <option value="泰国">🇹🇭泰国</option>
-                        <option value="韩国">🇰🇷韩国</option>
-                        <option value="印度">🇮🇳印度</option>
-                        <option value="其它">其它</option>
+                        <option value="china">🇨🇳中国</option>
+                        <option value="america">🇺🇸美国</option>
+                        <option value="england">🇬🇧英国</option>
+                        <option value="france">🇫🇷法国</option>
+                        <option value="japan">🇯🇵日本</option>
+                        <option value="thailand">🇹🇭泰国</option>
+                        <option value="korea">🇰🇷韩国</option>
+                        <option value="india">🇮🇳印度</option>
+                        <option value="other">其它</option>
                         <option selected value="<%= video.country %>"><%= video.country %></option>
                     </select>
                 </div>
@@ -30,21 +30,21 @@
                     <label>分类</label>
                     <select class="ui search fluid dropdown" name="classify">
                         <option value="">分类</option>
-                        <option value="军事">军事</option>
-                        <option value="搞笑">搞笑</option>
-                        <option value="音乐">音乐</option>
-                        <option value="新闻">新闻</option>
-                        <option value="娱乐">娱乐</option>
-                        <option value="体育">体育</option>
-                        <option value="游戏">游戏</option>
-                        <option value="时尚">时尚</option>
-                        <option value="生活">生活</option>
-                        <option value="母婴">母婴</option>
-                        <option value="汽车">汽车</option>
-                        <option value="教育">教育</option>
-                        <option value="科技">科技</option>
-                        <option value="旅游">旅游</option>
-                        <option value="其它">其它</option>
+                        <option value="military">军事</option>
+                        <option value="funny">搞笑</option>
+                        <option value="music">音乐</option>
+                        <option value="news">新闻</option>
+                        <option value="entertainment">娱乐</option>
+                        <option value="physical education">体育</option>
+                        <option value="game">游戏</option>
+                        <option value="fashion">时尚</option>
+                        <option value="life">生活</option>
+                        <option value="mother and baby">母婴</option>
+                        <option value="car">汽车</option>
+                        <option value="education">教育</option>
+                        <option value="technology">科技</option>
+                        <option value="tourism">旅游</option>
+                        <option value="other">其它</option>
                         <option selected value="<%= video.classify %>"><%= video.classify %></option>
                     </select>
                 </div>
@@ -55,7 +55,7 @@
             </div>
             <div class="field">
                 <label>封面</label>
-                <input type="hidden" name="image" value="<%= video.image %>">
+                <input type="hidden" name="image_path" value="<%= video.image_path %>">
                 <input type="file" name="newFile" multiple>
             </div>
             <div class="field">
@@ -99,7 +99,7 @@
   $(function () {
     $('select.dropdown').dropdown()
     let formdata = new FormData()
-    formdata.append('image', $('input[name=image]').val())
+    formdata.append('image_path', $('input[name=image_path]').val())
     formdata.append('video_path', $('input[name=video_path]').val())
     $('input[name=newFile]').change(function (e) {
       console.log(e.target.files[0])
@@ -140,7 +140,7 @@
             dataType: 'json',
             success: function (data) {
               isAllow = true
-              if (data.code === 200) {
+              if (data.code === 0) {
                 alert('修改成功')
                 location.href = '/'
                 formdata = new FormData()
@@ -188,7 +188,7 @@
               }
             ]
           },
-          image: {
+          image_path: {
             identifier: 'image',
             rules: [
               {

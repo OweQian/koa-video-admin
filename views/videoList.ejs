@@ -25,9 +25,9 @@
                 <td><%= video.country %></td>
                 <td><%= video.classify %></td>
                 <td><%= video.release_time %></td>
-                <td><img src="./images/<%= video.image %>" width="40" height="40" alt=""></td>
+                <td><img src="./images/<%= video.image_path %>" width="40" height="40" alt=""></td>
                 <td>
-                    <!--<video src="./images/<%= video.image %>" width="400" height="400" alt="">-->
+                    <!--<video src="./images/<%= video.image_path %>" width="400" height="400" alt="">-->
                     <video width="120" height="120" controls>
                         <source src="./images/<%= video.video_path %>" type="video/mp4">
                         <!--<source src="movie.ogg" type="video/ogg">-->
@@ -63,10 +63,10 @@
   $(function () {
     $('.delete').click((e) => {
       $.ajax({
-        url: `/delete/${e.target.getAttribute('v-id')}`,
-        type: 'POST',
+        url: `/delete?id=${e.target.getAttribute('v-id')}`,
+        type: 'DELETE',
         success: function (res) {
-          if (res.code === 200) {
+          if (res.code === 0) {
             alert('删除成功')
           } else {
             alert('删除失败')

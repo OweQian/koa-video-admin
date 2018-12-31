@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "koa-logger": "^3.1.0",
+    "lodash": "^4.17.11",
     "moment": "^2.20.1",
     "trek-captcha": "^0.3.0"
   }
