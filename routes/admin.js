@@ -3,45 +3,18 @@ const router = require('koa-router')({
 })
 
 const controllers = require('../controllers')
-const apiModel = require('../lib/mysql')
-const path = require('path')
-const fs = require('fs')
-const checkLogin = require('../middlewares/check').checkLogin
 
 // 登录视图
-router.get('/login', async (ctx, next) => {
-  if (ctx.session.user) {
-    await ctx.redirect('/')
-  } else {
-    await ctx.render('login')
-  }
-})
+router.get('/login', controllers.admin.renderLogin)
 
 // 退出
-router.get('/logout', async (ctx, next) => {
-  ctx.session = null
-  await ctx.redirect('/login')
-})
+router.get('/logout', controllers.admin.renderLogout)
 
 // 上传video数据视图
-router.get('/upload', async (ctx, next) => {
-  await checkLogin(ctx)
-  await ctx.render('upload', {
-    session: ctx.session
-  })
-})
+router.get('/upload', controllers.admin.renderAddVideo)
 
 // edit video get
-router.get('/edit/:id', async (ctx, next) => {
-  let data
-  await apiModel.findVideoById(ctx.params.id).then(res => {
-    data = JSON.parse(JSON.stringify(res))
-  })
-  await ctx.render('edit', {
-    session: ctx.session,
-    video: data[0]
-  })
-})
+router.get('/edit/:id', controllers.admin.renderEditVideo)
 
 router.get('/', controllers.admin.videoList)
 
