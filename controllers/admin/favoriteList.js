@@ -9,7 +9,7 @@ module.exports = async (ctx) => {
   await apiModel.findData('favorites').then(res => {
     dataLength = res.length
   })
-  await apiModel.findPageData('favorites', page, 15).then(res => {
+  await apiModel.getFavorite(page, 15).then(res => {
     data = res
   })
   await ctx.render('favorites', {

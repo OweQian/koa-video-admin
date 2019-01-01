@@ -9,8 +9,9 @@ module.exports = async (ctx) => {
   await apiModel.findData('comments').then(res => {
     dataLength = res.length
   })
-  await apiModel.findPageData('comments', page, 15).then(res => {
+  await apiModel.getComment(page, 15).then(res => {
     data = res
+    console.log(res)
   })
   await ctx.render('comments', {
     session: ctx.session,

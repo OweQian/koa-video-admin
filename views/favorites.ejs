@@ -8,22 +8,26 @@
             <thead>
             <tr>
                 <th>ID</th>
-                <th>喜欢/不喜欢</th>
                 <th>用户名</th>
                 <th>影片名称</th>
+                <th>喜欢/不喜欢</th>
                 <th>评分</th>
-                <th>影片ID</th>
             </tr>
             </thead>
             <tbody>
             <% favorites.forEach(function (favorite) { %>
             <tr>
                 <td><%= favorite.id %></td>
-                <td><%= favorite.is_favorite %></td>
                 <td><%= favorite.username %></td>
-                <td><%= favorite.video_name %></td>
+                <td><%= favorite.name %></td>
+                <td>
+                    <% if (favorite.is_favorite === '1') { %>
+                    喜欢
+                    <% } else { %>
+                    不喜欢
+                    <% } %>
+                </td>
                 <td><%= favorite.star %></td>
-                <td><%= favorite.uid %></td>
             </tr>
 
             <% }) %>
