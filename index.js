@@ -11,7 +11,6 @@ const logger = require('koa-logger')
 const compress = require('koa-compress')
 const koaBody = require('koa-body')
 const StaticCache = require('koa-static-cache')
-const response = require('./middlewares/response')
 const app = new Koa()
 const route = new Router()
 // 配置存储session信息的mysql
@@ -22,7 +21,6 @@ let store = new MysqlStore({
   host: config.DATABASE.HOST
 })
 
-app.use(response)
 app.use(logger())
 app.use(cors())
 
@@ -61,9 +59,8 @@ app.use(koaBody({
     }
   }
 ))
-
 app.use(require('./routes/admin').routes()).use(route.allowedMethods())
 app.use(require('./routes/mobile').routes()).use(route.allowedMethods())
 
-app.listen(3000)
-console.log(`listening on port 3000`)
+app.listen(config.PORT)
+console.log(`listening on port ${config.PORT}`)
