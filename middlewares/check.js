@@ -12,10 +12,9 @@ module.exports = {
   },
   checkToken: async ctx => {
     let token = ctx.get('token')
-    let {username} = ctx.request.body
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       // 解析token
-      jwt.verify(token, config.JWT_SECRET, (err, decoded) => {
+      jwt.verify(token, config.JWT_SECRET, async (err, decoded) => {
         if (err) {
           if (err.message === 'jwt expired') {
             reject({
@@ -29,9 +28,11 @@ module.exports = {
             })
           }
         } else {
-          if (username === decoded.username) {
+          let res = await apiModel.findMobileUserById(decoded.userId)
+          if (res) {
             resolve({
               code: 200,
+              data: decoded.userId,
               message: '验证成功'
             })
           } else {

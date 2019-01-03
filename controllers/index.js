@@ -17,5 +17,18 @@ module.exports = {
   mobile: {
     login: require('./mobile/login'),
     videoList: require('./mobile/videoList'),
+    videoDetail: require('./mobile/videoDetail'),
+    videoComments: require('./mobile/videoComments'),
+    userComments: require('./mobile/userComments'),
+    addComments: require('./mobile/addComments'),
+    deleteComments: require('./mobile/deleteComments'),
+    addFavorite: require('./mobile/addFavorite'),
+    videoFavorite: require('./mobile/videoFavorite'),
+    userFavorite: require('./mobile/userFavorite'),
+    search: require('./mobile/search'),
+    code: require('./mobile/code'),
+    uploadAvator: require('./mobile/uploadAvator'),
+    avator: require('./mobile/avator'),
+    editUsername: require('./mobile/editUsername'),
   }
 }

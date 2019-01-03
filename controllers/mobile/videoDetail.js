@@ -1,10 +1,11 @@
 const apiModel = require('../../lib/mysql')
 module.exports = async (ctx) => {
-  await apiModel.findData('videos').then(res => {
+  let { id } = ctx.query
+  await apiModel.findVideoById(id).then(res => {
     ctx.body = {
       code: 0,
-      data: res,
-      message: '获取数据成功'
+      message: '获取数据成功',
+      data: res[0]
     }
   }).catch(err => {
     ctx.body = {
